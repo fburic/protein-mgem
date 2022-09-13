@@ -1,0 +1,6 @@
+data_root: '~/projects/DeepTranslation'
+protein_sequence: 'results/20211223_182228/data/augmented_sequences_with_counterexamples.fasta'
+protein_abundance: 'results/20211223_182228/data/augmented_abundance_with_counterexamples.csv'
+input: 'seq'
+target: 'Median_molecules_per_cell'
+merge_col: 'swissprot_ac'

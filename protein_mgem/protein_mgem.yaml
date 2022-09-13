@@ -1,0 +1,39 @@
+name: Protein-MGEM
+channels:
+  - bioconda
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.9
+  - cython
+  - conda-forge::tensorflow-gpu
+  - conda-forge::keras-tuner
+  - biopython
+  - coloredlogs
+  - pytorch::pytorch
+  - pip=21.3.1
+  - pyarrow
+  - pytest
+  - snakemake-minimal
+  - h5py
+  - pytables
+  - pandas
+  - numpy
+  - scipy
+  - umap-learn
+  - scikit-learn
+  - pyspark
+  - openjdk
+  - pip:
+    - tape_proteins==0.5
+    - tabulate
+    - grove
+    - torchinfo
+    - aaindex
+    - python-levenshtein
+    - ray
+    - hpbandster
+    - tensorly==0.6.0
+    - goatools==1.0.15
+    - pytest

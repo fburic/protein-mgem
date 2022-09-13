@@ -1,0 +1,29 @@
+Bootstrap: docker
+From: continuumio/miniconda3:4.10.3
+
+%files
+    protein_mgem.yaml protein_mgem.yaml
+
+%post
+    mkdir -p /cephyr
+    mkdir -p /local
+    mkdir -p /apps
+    mkdir -p /usr/share/lmod/lmod
+    mkdir -p /var/hasplm
+    mkdir -p /var/opt/thinlinc
+    mkdir -p /usr/lib64
+    touch /usr/lib64/libdlfaker.so
+    touch /usr/lib64/libvglfaker.so
+    touch /usr/bin/nvidia-smi
+
+    apt-get update && apt install -y --no-install-recommends build-essential rsync
+    /opt/conda/bin/conda env update --name base --file protein_mgem.yaml --prune
+
+    ######
+    # Workaround: Use conda JDK package since Spark looks for older Java 1.8.0 in system dir
+    ######
+    mkdir -p /usr/lib/jvm/java-1.8.0-openjdk-amd64/bin
+    ln -s /opt/conda/bin/java /usr/lib/jvm/java-1.8.0-openjdk-amd64/bin/java
+
+%runscript
+    exec "$@"

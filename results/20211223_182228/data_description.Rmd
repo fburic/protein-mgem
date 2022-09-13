@@ -1,0 +1,191 @@
+---
+title: "Protein Abundance Data Overview"
+output: html_notebook
+---
+
+```{r, message=F, warning=F}
+library("tidyverse")
+library("ggridges")
+```
+
+```{r, message=F}
+abundance <- 
+    read_csv('../data/ho2018/prot_abundance_molecules_per_cell_no_gfp.csv') %>%
+    dplyr::mutate(abundance_decile = ntile(Median_molecules_per_cell, 10))
+
+experiment_vals <- 
+    abundance %>% 
+    dplyr::select(-c(Systematic_Name, Standard_Name, Qualifier, Mean_molecules_per_cell, Median_molecules_per_cell, Coefficient_of_Variation, abundance_decile)) %>% 
+    pivot_longer(cols = -c(swissprot_ac), names_to = 'experiment', values_to = 'molecuels_per_cell')
+
+abundance_cv <-
+    experiment_vals %>% 
+    dplyr::group_by(swissprot_ac) %>% 
+        dplyr::summarize(CV = 100 * sd(molecuels_per_cell, na.rm = T) / mean(molecuels_per_cell, na.rm = T)) %>% 
+    dplyr::ungroup()
+```
+
+
+```{r}
+median_abunadnce_by_bin <- 
+    abundance %>% 
+    group_by(abundance_decile) %>% 
+        summarise(bin_median = as.integer(median(Mean_molecules_per_cell))) %>% 
+    ungroup()
+```
+
+
+
+```{r, message=F}
+p_abundance_bins <- 
+    abundance %>% 
+    inner_join(abundance_cv, by = "swissprot_ac") %>% 
+    inner_join(median_abunadnce_by_bin, by = "abundance_decile") %>% 
+    
+    ggplot() + 
+    geom_density_ridges(aes(x = CV, y = factor(abundance_decile)),
+                        rel_min_height = 1e-3) +
+    geom_label(aes(x = 225, y = factor(abundance_decile), label = bin_median),
+               nudge_y = 0.5) +
+    xlim(0, 250) +
+    ylab("Median abundance decile") +
+    xlab("CV (%) of abundance [molecules per cell]") + 
+    # ggtitle("Variability of protein abundance across experiments") +
+    theme_classic(base_size = 18) +
+    theme(axis.text = element_text(colour = "black"))
+
+
+ggsave("abundance_bins.pdf", p_abundance_bins, dpi = 100)
+ggsave("abundance_bins.png", p_abundance_bins, dpi = 200, width = 16, height = 16, unit = "cm")
+
+p_abundance_bins
+```
+
+```{r}
+MIN_N_EXPERIMENTS = 10
+
+median_experiment_proteome_var <- 
+    experiment_vals %>% 
+    group_by(swissprot_ac) %>% 
+        mutate(n = sum(!is.na(molecuels_per_cell))) %>% 
+    ungroup() %>% 
+    filter(n >= MIN_N_EXPERIMENTS) %>% 
+        
+    group_by(experiment) %>% 
+        summarize(var_prots_within_exper = var(molecuels_per_cell, na.rm = T)) %>% 
+    ungroup() %>% 
+    summarize(median(var_prots_within_exper)) %>% 
+    pull
+
+
+prot_var_over_experiments <- 
+    experiment_vals %>% 
+    group_by(swissprot_ac) %>% 
+        mutate(n = sum(!is.na(molecuels_per_cell))) %>% 
+    ungroup() %>% 
+    filter(n >= MIN_N_EXPERIMENTS) %>% 
+    
+    group_by(swissprot_ac) %>% 
+        summarize(var_prot_over_exper = var(molecuels_per_cell, na.rm = T)) %>% 
+    ungroup() %>% 
+    drop_na() %>% 
+    
+    mutate(var_ratio = var_prot_over_exper / median_experiment_proteome_var)
+
+
+p_var_ratio <- prot_var_over_experiments %>% 
+    ggplot() + 
+    geom_histogram(aes(x = var_ratio), fill = "black") +
+    scale_x_log10() +
+    
+    xlab("Abundance variance across experiments\n / median variance within an experiment") + 
+    ylab("N. proteins") +
+    theme_classic(base_size = 18) +
+    theme(axis.text = element_text(colour = "black"))
+
+ggsave("prot_var_ratio.pdf", p_var_ratio, dpi = 100)
+ggsave("prot_var_ratio.png", p_var_ratio, dpi = 200, width = 16, height = 10, unit = "cm")
+
+p_var_ratio
+```
+
+
+
+
+```{r, fig.height=5, fig.width=5}
+p_distrib <- 
+    experiment_vals %>% 
+    group_by(swissprot_ac) %>% 
+        mutate(n = sum(!is.na(molecuels_per_cell))) %>% 
+    ungroup() %>% 
+    filter(n >= MIN_N_EXPERIMENTS) %>% 
+    
+    inner_join(abundance, by = "swissprot_ac") %>% 
+    mutate(swissprot_ac = fct_reorder(.f = swissprot_ac, .x = Median_molecules_per_cell)) %>% 
+
+    ggplot() + 
+    geom_point(aes(x = molecuels_per_cell, y = swissprot_ac), alpha = 0.1, size=0.5, color="black") +
+    scale_x_log10(limits = c(5e2, 1e6)) +
+    
+    xlab("Abundance [molecules per cell] across experiments") + ylab("Protein") +
+
+    theme_classic(base_size = 18) + 
+    theme(axis.text = element_text(colour = "black"),
+          axis.text.y=element_blank(),
+          axis.ticks.y=element_blank(),
+          panel.border = element_rect(colour = "black", fill=NA, size=1))
+
+ggsave("protein_distrib.pdf", p_distrib, dpi=100)
+ggsave("protein_distrib.png", p_distrib, dpi=200, width = 16, height = 16, unit="cm")
+
+p_distrib
+```
+
+
+```{r, fig.height=8, fig.width=10}
+set.seed(123)
+
+proteins_to_plot <- 
+    experiment_vals %>% 
+    inner_join(abundance_cv) %>% 
+    #dplyr::filter(CV <= 100) %>% 
+    inner_join(abundance %>% select(swissprot_ac, abundance_decile), by = "swissprot_ac") %>% 
+    group_by(swissprot_ac) %>% 
+        mutate(n_exp = n()) %>% 
+    ungroup() %>% 
+    filter(n_exp >= 10) %>% 
+    
+    group_by(abundance_decile) %>% 
+        sample_n(20) %>% 
+    ungroup() %>% 
+    
+    select(swissprot_ac) %>%
+    pull
+
+p_sample_distribs <-  
+    experiment_vals %>% 
+    filter(swissprot_ac %in% proteins_to_plot) %>% 
+    drop_na(molecuels_per_cell) %>%
+    inner_join(abundance %>% select(swissprot_ac, Median_molecules_per_cell), by = "swissprot_ac") %>%
+    mutate(swissprot_ac = fct_reorder(.f = swissprot_ac, .x = Median_molecules_per_cell)) %>% 
+
+    ggplot() + 
+    geom_density_ridges(aes(x = molecuels_per_cell, y = swissprot_ac), 
+                        size = 0.2,
+                        scale = 10,
+                        rel_min_height = 1e-2, 
+                        alpha = 0.2,
+                        fill="black") +
+    
+    scale_x_log10(limits = c(10, 1e6)) +
+    
+    xlab("Abundance [median molecules per cell] across experiments") + ylab("Proteins") +
+    theme_classic(base_size = 14) + 
+    theme(panel.background = element_rect(fill = "white")) + 
+    theme(axis.text.y=element_blank(),
+          axis.ticks.y=element_blank())
+
+ggsave("protein_distrib_sample.pdf", p_sample_distribs, dpi=100)
+
+p_sample_distribs
+```
