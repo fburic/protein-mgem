@@ -54,7 +54,7 @@ or by using the Singularity wrapper (`run_python.sh SCRIPT ARGS`).
 The latter calls the Python interpreter in the `protein_megem.sif` Singularity image
 (either downloaded or built by the user - see Software Requirements).
 
-For the various scripts and parameters, see the [research log](../results/20211223_182228/README.md)
+For the various scripts and parameters, see the [research log](results/20211223_182228/README.md)
 As a general rule, the scripts use the information supplied in `experiment_config.yaml`
 (input files and certain parameter values) as input arguments.
 
