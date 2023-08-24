@@ -33,18 +33,13 @@ Protein-MGEM was developed and used on POSIX systems:
 Ubuntu 18.04, CentOS 7.8 Linux, as well as macOS 10.15 (Catalina) - 12.5.1 (Monterey)
 
 
-## Unit Tests
-
-Some functions in the codebase have unit tests for assessing their correctness.
-These may also be used for a quick cehck that the codebase is runnable.
-
-To run these, from the repo top directory level execute: `./test/run_unit_tests.sh`
-
-
 ## TODO: Models and Data
 
 These may be downloaded from Zenodo by running the download scripts in the
 `model` and `data` directories.
+
+Intermediate large results (such as attention profiles) are stored in their corresponding
+experiment directory, while initial inputs are kept in `data`.
 
 
 ## Running Scripts
@@ -58,4 +53,11 @@ For the various scripts and parameters, see the [research log](results/20211223_
 As a general rule, the scripts use the information supplied in `experiment_config.yaml`
 (input files and certain parameter values) as input arguments.
 
+
+## Unit Tests
+
+Some functions in the codebase have unit tests for assessing their correctness.
+These may also be used for a quick cehck that the codebase is runnable.
+
+To run these, from the repo top directory level execute: `./test/run_unit_tests.sh`
 
