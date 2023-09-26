@@ -20,9 +20,9 @@ and abundances `data/ho2018/prot_abundance_molecules_per_cell_no_gfp.csv` files 
 - **C**: aaindex_attention_corr.ipynb
   * inputs: `data/aa_costs/aa_costs_barton.csv`, `results/20211223_182228/informed_mutation/guided_mutation_results.csv.gz`
 - **D**: attention_and_secondary_structure.ipynb
-  * input: `data/pdb_yeast/pdb_files_alphafold` (precomputed`results/20211223_182228/secondary_structures.csv.gz` available as alternative) 
+  * inputs: `data/pdb_yeast/pdb_files_alphafold` (precomputed`results/20211223_182228/secondary_structures.csv.gz` available as alternative) 
 - **E**: attention_and_interpro.ipynb
-  * input: `data/interpro/yeast_protein2ipr.csv.gz`, `data/interpro/entry.list`, `results/20211223_182228/attention_patterns/`, `data/seq/yeast_gene_entries_2020_02_26.csv`, `data/s288c_genes_ncbi_20210305.tsv`
+  * inputs: `data/interpro/yeast_protein2ipr.csv.gz`, `data/interpro/entry.list`, `results/20211223_182228/attention_patterns/`, `data/seq/yeast_gene_entries_2020_02_26.csv`, `data/s288c_genes_ncbi_20210305.tsv`
 
 ### Figure 2
 
@@ -42,8 +42,9 @@ TODO
 ### Supplemental Figures:
 
 - **S1**: data_description.Rmd
+  * inputs: `data/ho2018/prot_abundance_molecules_per_cell_no_gfp.csv`
 - **S3**: attention_and_interpro.ipynb
-  * input: `data/interpro/yeast_protein2ipr.csv.gz`, `data/interpro/entry.list`, `results/20211223_182228/attention_patterns/`, `data/seq/yeast_gene_entries_2020_02_26.csv`, `data/s288c_genes_ncbi_20210305.tsv`
+  * inputs: `data/interpro/yeast_protein2ipr.csv.gz`, `data/interpro/entry.list`, `results/20211223_182228/attention_patterns/`, `data/seq/yeast_gene_entries_2020_02_26.csv`, `data/s288c_genes_ncbi_20210305.tsv`
 - **S4**: aindex_attention_corr.ipynb
   * inputs: `data/aa_costs/aa_costs_barton.csv`, `results/20211223_182228/informed_mutation/guided_mutation_results.csv.gz`
 
