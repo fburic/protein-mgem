@@ -37,11 +37,15 @@ and abundances `data/ho2018/prot_abundance_molecules_per_cell_no_gfp.csv` files 
 
 ### Figure 3
 
-- **F?**: cost_attention_corr.ipynb
+TODO
 
-### Supplemental Figures: TODO
+### Supplemental Figures:
 
 - **S1**: data_description.Rmd
+- **S3**: attention_and_interpro.ipynb
+  * input: `data/interpro/yeast_protein2ipr.csv.gz`, `data/interpro/entry.list`, `results/20211223_182228/attention_patterns/`, `data/seq/yeast_gene_entries_2020_02_26.csv`, `data/s288c_genes_ncbi_20210305.tsv`
+- **S4**: aindex_attention_corr.ipynb
+  * inputs: `data/aa_costs/aa_costs_barton.csv`, `results/20211223_182228/informed_mutation/guided_mutation_results.csv.gz`
 
 
 ## History
