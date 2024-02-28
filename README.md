@@ -34,10 +34,10 @@ Protein-MGEM was developed and used on POSIX systems:
 Ubuntu 18.04, CentOS 7.8 Linux, as well as macOS 10.15 (Catalina) - 12.5.1 (Monterey)
 
 
-## TODO: Models and Data
+## Models and Data
 
-These may be downloaded from Zenodo by running the download scripts in the
-`model` and `data` directories.
+These may be downloaded from Zenodo by running the respective download scripts:
+`download_models.sh` and `download_data.sh`
 
 Intermediate large results (such as attention profiles) are stored in their corresponding
 experiment directory, while initial inputs are kept in `data`.
