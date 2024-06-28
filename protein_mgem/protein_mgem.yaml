@@ -25,12 +25,13 @@ dependencies:
   - scikit-learn
   - pyspark
   - openjdk
+  - pingouin=0.5.4
   - pip:
     - tape_proteins==0.5
     - tabulate
     - grove
     - torchinfo
-    - aaindex
+    - aaindex==0.0.2
     - python-levenshtein
     - ray
     - hpbandster

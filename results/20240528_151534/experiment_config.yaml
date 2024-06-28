@@ -1,0 +1,17 @@
+# Analysis config file
+# Using normal dataset since aim is to analyze protein sequences
+# (not interested in the multiple abundance values for same sequences or
+# shuffled counter-examples)
+#
+# All paths relative to experiment directory
+files:
+  protein_sequences: '../../data/seq/scerevisiae_aminoacid_uniprot_20200120_seqlen_100_to_1000.fasta'
+  protein_abundances: '../../data/ho2018/prot_abundance_molecules_per_cell_no_gfp.csv'
+  model_checkpoint: '../../model/bert/learn_abundance_transformer_parallel_22-01-14-10-36-57_027418'
+  arch: 'best_config.json'
+  umap_encoder_embedding_dir: '../..//model/umap_embedder_pos'
+  saved_seq_orderings: 'seq_orderings.h5'
+
+attention_weights_redundancy_corr_threshold: 1e-5
+boxcox_lambda: -0.05155
+

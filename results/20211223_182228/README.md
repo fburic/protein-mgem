@@ -1,52 +1,9 @@
-# Enhanced dataset with counter-examples for `BERT : aa_seq -> prot_abundance`
+# `BERT : aa_seq -> prot_abundance` using enhanced dataset with counter-examples
 
 Used quantities from all Ho et al. (2018) experiments, not just medians,
 by having protein sequences repeated.
 For each sequence duplicate, have a shuffled version with abundance zero.
 Dataset prepared with the notebook `prep_data.ipynb`
-
-
-## Figure Source Guide
-
-*(Unless otherwise stated, notebooks use the same protein sequence `data/seq/scerevisiae_aminoacid_uniprot_20200120_seqlen_100_to_1000.fasta`
-and abundances `data/ho2018/prot_abundance_molecules_per_cell_no_gfp.csv` files as input)*
-
-### Figure 1
-
-- **A**: inspect_best_model.ipynb
-  * inputs `model/bert`
-- **B**: cost_attention_corr.ipynb
-  * inputs: `data/protein_features/uncorr_aaindex_profiles.h5`, `results/20211223_182228/attention_patterns/`
-- **C**: aaindex_attention_corr.ipynb
-  * inputs: `data/aa_costs/aa_costs_barton.csv`, `results/20211223_182228/informed_mutation/guided_mutation_results.csv.gz`
-- **D**: attention_and_secondary_structure.ipynb
-  * inputs: `data/pdb_yeast/pdb_files_alphafold` (precomputed`results/20211223_182228/secondary_structures.csv.gz` available as alternative) 
-- **E**: attention_and_interpro.ipynb
-  * inputs: `data/interpro/yeast_protein2ipr.csv.gz`, `data/interpro/entry.list`, `results/20211223_182228/attention_patterns/`, `data/seq/yeast_gene_entries_2020_02_26.csv`, `data/s288c_genes_ncbi_20210305.tsv`
-
-### Figure 2
-
-- **C**: inspect_embedded_ordering.ipynb
-  * inputs: `seq_orderings.h5` (precomputed ordering values, see notebook for recreating them)
-- **D**: guided_mutation_results.ipynb
-  * inputs: `guided_mutation_results.csv.gz`, `data/aa_costs/aa_costs_barton.csv`
-- **E**: ordering_overview_over_sequences.ipynb
-  * inputs: `seq_orderings.h5` 
-- **F**: guided_mutation_results.ipynb
-- **G**: guided_mutation_results.ipynb
-
-### Figure 3
-
-TODO
-
-### Supplemental Figures:
-
-- **S1**: data_description.Rmd
-  * inputs: `data/ho2018/prot_abundance_molecules_per_cell_no_gfp.csv`
-- **S3**: attention_and_interpro.ipynb
-  * inputs: `data/interpro/yeast_protein2ipr.csv.gz`, `data/interpro/entry.list`, `results/20211223_182228/attention_patterns/`, `data/seq/yeast_gene_entries_2020_02_26.csv`, `data/s288c_genes_ncbi_20210305.tsv`
-- **S4**: aindex_attention_corr.ipynb
-  * inputs: `data/aa_costs/aa_costs_barton.csv`, `results/20211223_182228/informed_mutation/guided_mutation_results.csv.gz`
 
 
 ## History
