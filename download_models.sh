@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-wget https://zenodo.org/records/10725930/files/model.zip
+wget https://zenodo.org/records/12579890/files/model.zip
 unzip model.zip
