@@ -55,6 +55,62 @@ As a general rule, the scripts use the information supplied in `experiment_confi
 (input files and certain parameter values) as input arguments.
 
 
+## Getting Abundance Predictions
+
+To obtain protein abundance predictions from amino acid sequences using the trained model,
+the following code can be used:
+
+```python
+import random
+
+import numpy as np
+from scipy.special import inv_boxcox
+import torch
+from tape import ProteinBertForValuePrediction, TAPETokenizer
+from tqdm import tqdm
+
+from scripts.general import preprocess
+
+
+aa_fasta_fname = 'data/seq/scerevisiae_aminoacid_uniprot_20200120_seqlen_100_to_1000.fasta'
+model_fname = 'model/bert/learn_abundance_transformer_parallel_22-01-14-10-36-57_027418'
+
+# Fix random seeds for reproducibility
+RND_SEED = 123
+torch.manual_seed(RND_SEED)
+np.random.seed(RND_SEED)
+random.seed(RND_SEED)
+torch.backends.cudnn.benchmark = False
+if torch.cuda.device_count() > 0:
+    torch.cuda.manual_seed_all(RND_SEED)
+
+# Load model and set it to evaluation state
+model = ProteinBertForValuePrediction.from_pretrained(model_fname, output_attentions=False)
+model.eval()
+
+# Load sequences as Pandas DataFrame to ease downstream analysis
+# The functions assumes FASTA headers with the format sp|UniProt_ID|info
+# but a custom parsing function may be passed. Please see the function docstring.
+sequences = preprocess.fasta_to_seq_df(aa_fasta_fname, id_name='seq_id')
+
+# Get predictions for the (tokenized) sequences
+tokenizer = TAPETokenizer(vocab='iupac')
+predictions = []
+for seq in tqdm(sequences['seq'].values, desc='Sequence predictions', ncols=80):
+    tokenized_seq = torch.tensor([tokenizer.encode(seq)])
+    pred = model(tokenized_seq)[0]
+    predictions.append(pred.detach().numpy()[0][0])
+predictions = np.array(predictions)
+
+# Inverse the Box-Cox abundance transformation with which the model was trained
+BOXCOX_LAMBDA = -0.05155
+predictions = inv_boxcox(predictions, BOXCOX_LAMBDA)
+
+# Attach predictions to sequence DataFrame for further processing
+sequences = sequences.assign(abundance_pred = predictions)
+```
+
+
 ## Unit Tests
 
 Some functions in the codebase have unit tests for assessing their correctness.
